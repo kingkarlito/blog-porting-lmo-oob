@@ -25,7 +25,7 @@ def create_parser(db, os="windows"):
         "--domain", help='Domain to try and beacon out to. Default: "letmeoutofyour.net"',
         required=False, default="letmeoutofyour.net"
     )
-    
+
     return parser
 
 
@@ -55,17 +55,10 @@ def create_message_body(db, command_line, campaign_name, endpoint_name):
     # This will return "windows" for Windows campaigns.
     parser = create_parser(db, db.get_campaign_operating_system_name(campaign_name))
 
-    if not command_line:
-        #raise ValueError("Error: arguments are missing.")
-        # If no args, re-define defaults
-        args = Namespace(
-            ports="[80,443,445,8080,3389,22,21]", 
-            domain="letmeoutofyour.net"
-        )
-    else:
-        argv = shlex.split(command_line, posix=False)
-        args = parser.parse_args(argv)        
-            
+    # Get arguments/defaults
+    argv = shlex.split(command_line, posix=False)
+    args = parser.parse_args(argv)
+
     # Convert Array String to Array
     try:
         ports = ast.literal_eval(args.ports)
@@ -111,4 +104,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
